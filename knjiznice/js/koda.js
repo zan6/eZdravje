@@ -36,13 +36,13 @@ function generirajPodatke(stPacienta) {
   var meritve;
         if(stPacienta == 1){
             oseba = ["Winchester,Dean,1984-07-25T11:32"];
-            meritve =["2014-11-21T11:40Z",185,80.0,36.50,118,92,98,"medicinska sestra Smrketa"];
+            meritve =["2015-09-13T12:03Z",185,81.5,35.50,118,92,98,"medicinska sestra Rowena"];
         }else if(stPacienta == 2){
             oseba = ["Rich,Piana,1971-09-26T14:58"];
-             meritve =["2014-11-21T11:40Z",185,80.0,36.50,118,92,98,"medicinska sestra Smrketa"];
+             meritve =["2016-03-19T19:31Z",185,140.3,41.50,125,98,72,"medicinska sestra Sara"];
         }else if(stPacienta == 3){
             oseba = ["Winchester,Sam,1987-05-03T09:58"];
-            meritve =["2014-11-21T11:40Z",185,80.0,36.50,118,92,98,"medicinska sestra Smrketa"];
+            meritve =["2015-08-25T12:10Z",191,78.0,32.50,119,91,87,"medicinska sestra Ruby"];
         }
         
     var sessionId = getSessionId();
