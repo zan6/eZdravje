@@ -29,7 +29,7 @@
         <ul class="nav navbar-nav">
           <li><a href="opis.html">Opis ideje</a></li>
           <li><a href="nacrt.html">Načrt informacijske rešitve</a></li>
-          <li><a href="#">Generiranje podatkov</a></li>
+          <li><a href="#" onClick="generiraj()">Generiranje podatkov</a></li>
         </ul>
       </div>
     </div>
@@ -37,14 +37,56 @@
   <!-- KONEC: Menujska vrstica na vrhu spletne strani -->
 
   <!-- ZAČETEK: Vsebina aplikacije -->
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-12 text-center">
-        <p class="lead"><strong>TO-DO</strong>: Na tem mestu implementirajte vašo aplikacijo.</p>
-      </div>
-    </div>
+<div class="container">
+  <div class="row">
+       	<div class="col-lg-6 col-md-6 col-sm-6">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<div class="row">
+							<div class="col-sm-8"><b>Preberi EHR zapis</b> obstoječega bolnika</div>
+							<select class="form-control input-sm" id="preberiPredlogoBolnika">
+							  <option value=""></option>
+							  <option value="Winchester,Dean,1984-07-25T11:32,ac54e092-5ea6-512e-3ffc-311de0da67q2">Dean Winchester</option>
+                <option value="Rich,Piana,1971-09-26T14:58,kj7l014-6ar3-619h-3haq-176hq1jq17g2">Rich Piana</option>
+                <option value="Winchester,Sam,1987-05-03T09:58,gd14t126-5dr7-234h-3jhs-411he0da82m2">Sam Winchester</option>
+						</select>
+						</div>
+						    <div class ="col-sm-4">
+						      <button type="button" class="btn btn-primary btn-xs" onclick="preberiEHRodBolnika()">Preberi osnovne podatke o bolniku</button><span id="preberiSporocilo"></span>
+				  	    </div>
+						</div>
+						<div class="panel-body">
+						  <div class ="row">
+						    <div class ="col-sm-6">
+						      <span class ="label label-info">Vpisi iskani ID</span></span><input id="preberiEHRid" type="text" class="form-control input-mini" placeholder="7b661e12-3a98-21ad-c29e-2dc9f5a3d885">
+						    </div>
+						  </div>
+						  <div class="row">
+						    <div class="col-sm-5">
+						      <span class ="label label-info">Ime</span><input id="izpisiIme" type="text" class="form-control input-mini" readonly>
+						    </div>
+						    <div class="col-sm-5">
+						      <span class ="label label-info">Priimek</span><input id="izpisiIme" type="text" class="form-control input-mini" readonly>
+						    </div>
+						    <div class="col-sm-5">
+						      <span class ="label label-info">Datum Rojstva</span><input id="izpisiIme" type="text" class="form-control input-mini" readonly>
+						    </div>
+						  </div>
+						  <div class = "row">
+						    <div class="col-sm-8">
+						      <span id="preberiSporocilo"></span>
+						    </div>
+						  </div>
+						</div>
+					</div>
+			</div>
+			</div>
+			
+		</div>
   </div>
+</div>
   <!-- KONEC: Vsebina aplikacije -->
-
+  
 </body>
 </html>
+  
