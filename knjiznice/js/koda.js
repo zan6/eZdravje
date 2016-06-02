@@ -37,14 +37,11 @@ function generirajPodatke(stPacienta) {
         if(stPacienta == 1){
             oseba = ["Winchester,Dean,1984-07-25T11:32"];
             meritve =["2014-11-21T11:40Z",185,80.0,36.50,118,92,98,"medicinska sestra Smrketa"];
-           // ehrId = "b931580f-2b05-488b-985b-8d9ffb08ad02";
         }else if(stPacienta == 2){
             oseba = ["Rich,Piana,1971-09-26T14:58"];
-           // ehrId = "c098762g-7a04-5410s-039c-9r1aag35oe31";
              meritve =["2014-11-21T11:40Z",185,80.0,36.50,118,92,98,"medicinska sestra Smrketa"];
         }else if(stPacienta == 3){
             oseba = ["Winchester,Sam,1987-05-03T09:58"];
-           // ehrId = "p431574a-3g41-5651g-315h-3cqage57oy16";
             meritve =["2014-11-21T11:40Z",185,80.0,36.50,118,92,98,"medicinska sestra Smrketa"];
         }
         
@@ -82,6 +79,10 @@ function generirajPodatke(stPacienta) {
 		                if (party.action == 'CREATE') {
 		                   var izpisiImePriimek = oseba[0]+" "+oseba[1];
 		                   var izpisiVse = oseba[1]+","+oseba[0]+","+oseba[2]+","+ehrId;
+		                    $('#preberiPredlogoBolnika').append('<option value="'+izpisiVse+'">'+izpisiImePriimek+'</option>');
+		                    for(var i in meritve){
+		                    	vitalniZnakiGeneriranegaPacienta(meritve,ehrId,i);
+		                    }
 		                }
 		            },
 		            error: function(err) {
@@ -169,12 +170,24 @@ function generiraj(){
  */
 function preberiEHRodBolnika() {
 	var sessionId = getSessionId();
-
-	var ehrId = $("#preberiEHRid").val();
+    var ehrId = $("#preberiEHRid").val();
+    
+    $("#dodajVitalnoEHR").val("");
+	$("#dodajVitalnoDatumInUra").val("");
+	$("#dodajVitalnoTelesnaVisina").val("");
+	$("#dodajVitalnoTelesnaTeza").val("");
+	$("#dodajVitalnoTelesnaTemperatura").val("");
+	$("#dodajVitalnoKrvniTlakSistolicni").val("");
+	$("#dodajVitalnoKrvniTlakDiastolicni").val("");
+	$("#dodajVitalnoNasicenostKrviSKisikom").val("");
+	$("#dodajVitalnoMerilec").val("");    
+	$("#preberiSporocilo").html("<span id='preberiSporocilo'</span>");
 
 	if (!ehrId || ehrId.trim().length == 0) {
-		$("#preberiSporocilo").html("<span class='obvestilo label label-warning " +
-      "fade-in'>Prosim vnesite zahtevan podatek!");
+		if($('#preberiPredlogoBolnika').val()!=""){
+			$("#preberiSporocilo").html("<span class='obvestilo label label-warning " +
+    		"fade-in'>Prosim vnesi ehrId!");
+		}
 	} else {
 		$.ajax({
 			url: baseUrl + "/demographics/ehr/" + ehrId + "/party",
@@ -182,26 +195,56 @@ function preberiEHRodBolnika() {
 			headers: {"Ehr-Session": sessionId},
 	    	success: function (data) {
 				var party = data.party;
-				$("#preberiSporocilo").html("<span class='obvestilo label " +
-          "label-success fade-in'>Bolnik '" + party.firstNames + " " +
-          party.lastNames + "', ki se je rodil '" + party.dateOfBirth +
-          "'.</span>");
+			   $("#izpisImena").val(party.firstNames);
+    			$("#izpisPriimka").val(party.lastNames);
+    			$("#izpisDatuma").val(party.dateOfBirth);
+    	/*	$("#preberiSporocilo").html("<span class='obvestilo label " +
+          "label-success fade-in'>'" + party.firstNames +"'.</span>");
+          	$("#preberiSporocilo").html("<span class='obvestilo label " +
+          "label-success fade-in'>'" + party.lastNames +"'.</span>");
+          	$("#preberiSporocilo").html("<span class='obvestilo label " +
+          "label-success fade-in'>'" + party.dateOfBirth +"'.</span>");
+          */
 			},
-			error: function(err) {
-				$("#preberiSporocilo").html("<span class='obvestilo label " +
-          "label-danger fade-in'>Napaka '" +
-          JSON.parse(err.responseText).userMessage + "'!");
-			}
+		
 		});
+		$.ajax({
+		    url: baseUrl + "/demographics/ehr/" + ehrId + "/party",
+			type: 'GET',
+			headers: {"Ehr-Session": sessionId},
+	    	success: function (data) {
+	    	    if(data.length > 0){
+	    	       // $('#datum').append('<option value=""></option>');
+	    	        var meritve = [];
+	    	        for(var i in data){
+	    	            var check = false;
+	    	            for(var j in meritve){
+	    	                if(meritve[j] == data[i].time){
+	    	                    check = true;
+	    	                }
+	    	            }
+	    	            if(!check)
+	    	                $('#datum').append('<option value="'+data[i].time.substring(0, 7)+'">'+data[i].time.substring(0, 7)+'</option>');
+	    	        }
+	    	    }
+	    	},
+	    	error: function(err) {
+			    	$("#obvestilo").html(
+	            "<span class='obvestilo label label-danger fade-in'>Napaka '" +
+	            JSON.parse(err.responseText).userMessage + "'!");
+			    }
+		})
 	}
 }
  $(document).ready(function(){
      $("#preberiPredlogoBolnika").change(function(){
       $("#kreirajSporocilo").html("");
         var podatki = $(this).val().split(",");
-        $("#kreirajIme").val(podatki[0]);
-            $("#kreirajPriimek").val(podatki[1]);
-                $("#kreirajDatumRojstva").val(podatki[2]);
+        $("#izpisImena").val(podatki[0]);
+            $("#izpisPriimka").val(podatki[1]);
+                $("#izpisDatuma").val(podatki[2]);
+                    $("#preberiEHRid").val(podatki[3]);
+                        preberiEHRodBolnika();
      });
      $('#preberiObstojeciEHR').change(function() {
 		$("#preberiSporocilo").html("");
