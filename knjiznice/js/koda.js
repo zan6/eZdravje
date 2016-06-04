@@ -277,6 +277,100 @@ function kreirajEHRzaBolnika() {
 	}
 }
 
+
+function izracunajITM() {
+	var sessionId = getSessionId();
+    $("#sporocilo").html("");
+	var ehrId = $("#dodajVitalnoEHR").val();
+	if (!ehrId || ehrId.trim().length == 0) {
+		$("#sporocilo").html("<span class='obvestilo " +
+      "label label-warning fade-in'>Prosim vnesite zahtevan podatek!");
+	} else {
+		$.ajax({
+			url: baseUrl + "/demographics/ehr/" + ehrId + "/party",
+	    	type: 'GET',
+	    	headers: {"Ehr-Session": sessionId},
+	    	success: function (data) {
+				var party = data.party;
+				
+					$.ajax({
+  					    url: baseUrl + "/view/" + ehrId + "/" + "height",
+					    type: 'GET',
+					    headers: {"Ehr-Session": sessionId},
+					    success: function (res) {
+					    	if (res.length > 0) {
+					    	
+						    	visina = res[0].height;
+					    	} else {
+					    		$("#sporocilo").html(
+                    "<span class='obvestilo label label-warning fade-in'>" +
+                    "Ni podatkov!</span>");
+					    	}
+					    },
+					    error: function() {
+					    	$("#sporocilo").html(
+                  "<span class='obvestilo label label-danger fade-in'>Napaka '" +
+                  JSON.parse(err.responseText).userMessage + "'!");
+					    }
+					});
+				
+	    	},
+	    	error: function(err) {
+	    		$("#sporocilo").html(
+            "<span class='obvestilo label label-danger fade-in'>Napaka '" +
+            JSON.parse(err.responseText).userMessage + "'!");
+	    	}
+		});
+		$.ajax({
+			url: baseUrl + "/demographics/ehr/" + ehrId + "/party",
+	    	type: 'GET',
+	    	headers: {"Ehr-Session": sessionId},
+	    	success: function (data) {
+				var party = data.party;
+				
+
+					$.ajax({
+  					    url: baseUrl + "/view/" + ehrId + "/" + "weight",
+					    type: 'GET',
+					    headers: {"Ehr-Session": sessionId},
+					    success: function (res) {
+					    	if (res.length > 0) {
+					    		var itm = res[0].weight/(visina*0.01*visina*0.01);
+					    		itm = Math.round(itm*100)/100;
+					    		if(itm>18.5 && itm<25){
+						    		$('#rezultatITM').html('<br/><span>Vaš ITM je '+itm+' in je <b>normalen.</b></span>');
+					    		}
+					    		else if(itm < 18.5){
+					    				$('#rezultatITM').html('<br/><span>Vaš ITM je '+itm+' in je <b>prenizek.</b></span>');
+					    		}
+					    		else if(itm > 25){
+					    					$('#rezultatITM').html('<br/><span>Vaš ITM je '+itm+' in je <b>previsok.</b></span>');
+					    		}
+					    	
+					    		} else {
+					    		$("#sporocilo").html(
+                    "<span class='obvestilo label label-warning fade-in'>" +
+                    "Ni podatkov!</span>");
+					    	}
+					    },
+					    error: function() {
+					    	$("#sporocilo").html(
+                  "<span class='obvestilo label label-danger fade-in'>Napaka '" +
+                  JSON.parse(err.responseText).userMessage + "'!");
+					    }
+					});
+				
+	    	},
+	    	error: function(err) {
+	    		$("#sporocilo").html(
+            "<span class='obvestilo label label-danger fade-in'>Napaka '" +
+            JSON.parse(err.responseText).userMessage + "'!");
+	    	}
+		});
+	}
+}
+
+
 /**
  * Za podan EHR ID preberi demografske podrobnosti pacienta in izpiši sporočilo
  * s pridobljenimi podatki (ime, priimek in datum rojstva).
@@ -461,6 +555,8 @@ function preberiMeritveVitalnihZnakov() {
 		});
 	}
 }
+
+
  $(document).ready(function(){
      $("#preberiPredlogoBolnika").change(function(){
       $("#kreirajSporocilo").html("");
