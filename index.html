@@ -96,9 +96,9 @@
 							<div class="col-sm-8"><b>Vnos</b> meritve <b>vitalnih znakov</b> bolnika</div>
 							<div class="col-lg-4 col-md-4 col-sm-4"><select class="form-control input-sm" id="preberiObstojeciVitalniZnak">
 							  <option value=""></option>
-							  <option value="acca9ee6-6710-47b6-adba-51540d1bcde8|2015-09-13T12:03Z|185|81.5|35.50|118|92|98|medicinska sestra Rowena">Dean Winchester</option>
-						  	<option value="9561d449-7c81-4495-84ec-03c2b77cd3f3|2016-03-19T19:31Z|185|140.3|41.50|125|98|72|medicinska sestra Sara">Rich Piana</option>
-						  	<option value="0c0c4640-8c9c-411e-a6e3-a30529166063|2015-08-25T12:10Z|191|78.0|32.50|119|91|87|medicinska sestra Ruby">Sam Winchester</option>
+							  <option value="acca9ee6-6710-47b6-adba-51540d1bcde8|2015-09-13T12:03Z|185|81.5">Dean Winchester</option>
+						  	<option value="9561d449-7c81-4495-84ec-03c2b77cd3f3|2016-03-19T19:31Z|185|140.3">Rich Piana</option>
+						  	<option value="0c0c4640-8c9c-411e-a6e3-a30529166063|2015-08-25T12:10Z|191|78.0">Sam Winchester</option>
 						  	
 						  	</select>
 						  	</div>
@@ -106,17 +106,25 @@
 					</div>
 					<div class="panel-body">
 						 <span class="label label-info">EHR ID</span><input id="dodajVitalnoEHR" type="text" class="form-control input-mini" placeholder="7b661e12-3a98-21ad-c29e-2dc9f5a3d885"> 
-						 <button type="button" class="btn btn-primary btn-xs" onclick="izracunajITM()">Izračunaj ITM</button><span id="sporocilo"></span>
-						<div id="rezultatITM">
-						</div>
 						<span class="label label-info">Datum in ura</span><input id="dodajVitalnoDatumInUra" type="text" class="form-control input-mini" placeholder="2014-11-21T11:40Z">
 						<span class="label label-info">Telesna višina</span><div class="input-group"><input id="dodajVitalnoTelesnaVisina" type="text" class="form-control input-mini" placeholder="185"><span class="input-group-addon">cm</span></div>
 						<span class="label label-info">Telesna teža</span><div class="input-group"><input id="dodajVitalnoTelesnaTeza" type="text" class="form-control input-mini" placeholder="80.00"><span class="input-group-addon">kg</span></div>
-						<span class="label label-info">Telesna temperatura</span><div class="input-group"><input id="dodajVitalnoTelesnaTemperatura" type="text" class="form-control input-mini" placeholder="36.50"><span class="input-group-addon">°C</span></div>
-						<span class="label label-info">Sistolični krvni tlak</span><div class="input-group"><input id="dodajVitalnoKrvniTlakSistolicni" type="text" class="form-control input-mini" placeholder="118"><span class="input-group-addon">mm Hg</span></div>
-						<span class="label label-info">Diastolični krvni tlak</span><div class="input-group"><input id="dodajVitalnoKrvniTlakDiastolicni" type="text" class="form-control input-mini" placeholder="92"><span class="input-group-addon">mm Hg</span></div>
-						<span class="label label-info">Nasičenost krvi s kisikom</span><div class="input-group"><input id="dodajVitalnoNasicenostKrviSKisikom" type="text" class="form-control input-mini" placeholder="98"><span class="input-group-addon">%</span></div>
-						<span class="label label-info">Merilec</span><input id="dodajVitalnoMerilec" type="text" class="form-control input-mini" placeholder="medicinska sestra Dana">
+						<button type="button" class="btn btn-primary btn-xs" onclick="izracunajITM()">Izračunaj ITM</button><span id="sporocilo"></span>
+						<div id="rezultatITM">
+						</div>
+						 <button type="button" class="btn btn-primary btn-xs" onclick="izracunajBMR()">Izračunaj BMR</button><span id="sporocilo1"></span>
+						<div id="rezultatBMR">
+						</div>
+						<div id = "kalorijNaDan1">
+						</div>
+						<div id = "kalorijNaDan2">
+						</div>
+						<div id = "kalorijNaDan3">
+						</div>
+						<div id = "kalorijNaDan4">
+						</div>
+						<div id = "kalorijNaDan5">
+						</div>
 						<button type="button" class="btn btn-primary btn-xs" onclick="dodajMeritveVitalnihZnakov()">Dodaj meritve vitalnih znakov</button><span id="dodajMeritveVitalnihZnakovSporocilo"></span>
 				  	</div>
 				</div>

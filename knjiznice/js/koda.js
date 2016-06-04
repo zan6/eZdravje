@@ -1,4 +1,3 @@
-
 var baseUrl = 'https://rest.ehrscape.com/rest/v1';
 var queryUrl = baseUrl + '/query';
 
@@ -48,7 +47,6 @@ function generirajPodatke(stPacienta) {
   		datumRojstva = "1984-07-25T11:32";
   		teza = "83";
   		visina = "185";
-  		bolezen = "vrocina";
   	}break;
   	case 2:{
   		ehrId = getSessionId();
@@ -57,7 +55,6 @@ function generirajPodatke(stPacienta) {
   		datumRojstva = "1987-05-03T09:58";
   		teza = "87";
   		visina = "193";
-  		bolezen = "zlom noge";
   	}break;
   	case 3:{
   		ehrId = getSessionId();
@@ -66,7 +63,6 @@ function generirajPodatke(stPacienta) {
   		datumRojstva = "1971-09-26T14:58";
   		teza = "140";
   		visina = "183";
-  		bolezen = "strgane križne vezi";
   	}
   }
   ustvariPacienta(ehrId,ime,priimek,datumRojstva,teza,visina,bolezen);
@@ -74,7 +70,7 @@ function generirajPodatke(stPacienta) {
     
         
   
-function ustvariPacienta(ehrId,ime,priimek,datumRojstva,teza,visina,bolezen){
+function ustvariPacienta(ehrId,ime,priimek,datumRojstva,teza,visina){
     var sessionId = getSessionId();
 	console.log(sessionId);
 	$.ajaxSetup({
@@ -91,7 +87,6 @@ function ustvariPacienta(ehrId,ime,priimek,datumRojstva,teza,visina,bolezen){
 		            lastNames: priimek,
 		            dateOfBirth: datumRojstva,
 		            partyAdditionalInfo: [{key: "ehrId", value: ehrId},
-		            {key: "simptom", value: bolezen}
 		            ]
 		        };
 		        $.ajax({
@@ -129,11 +124,7 @@ function dodajMeritveVitalnihZnakov() {
 	var datumInUra = $("#dodajVitalnoDatumInUra").val();
 	var telesnaVisina = $("#dodajVitalnoTelesnaVisina").val();
 	var telesnaTeza = $("#dodajVitalnoTelesnaTeza").val();
-	var telesnaTemperatura = $("#dodajVitalnoTelesnaTemperatura").val();
-	var sistolicniKrvniTlak = $("#dodajVitalnoKrvniTlakSistolicni").val();
-	var diastolicniKrvniTlak = $("#dodajVitalnoKrvniTlakDiastolicni").val();
-	var nasicenostKrviSKisikom = $("#dodajVitalnoNasicenostKrviSKisikom").val();
-	var merilec = $("#dodajVitalnoMerilec").val();
+
 
 	if (!ehrId || ehrId.trim().length == 0) {
 		$("#dodajMeritveVitalnihZnakovSporocilo").html("<span class='obvestilo " +
@@ -150,17 +141,11 @@ function dodajMeritveVitalnihZnakov() {
 		    "ctx/time": datumInUra,
 		    "vital_signs/height_length/any_event/body_height_length": telesnaVisina,
 		    "vital_signs/body_weight/any_event/body_weight": telesnaTeza,
-		   	"vital_signs/body_temperature/any_event/temperature|magnitude": telesnaTemperatura,
-		    "vital_signs/body_temperature/any_event/temperature|unit": "°C",
-		    "vital_signs/blood_pressure/any_event/systolic": sistolicniKrvniTlak,
-		    "vital_signs/blood_pressure/any_event/diastolic": diastolicniKrvniTlak,
-		    "vital_signs/indirect_oximetry:0/spo2|numerator": nasicenostKrviSKisikom
 		};
 		var parametriZahteve = {
 		    ehrId: ehrId,
 		    templateId: 'Vital Signs',
 		    format: 'FLAT',
-		    committer: merilec
 		};
 		$.ajax({
 		    url: baseUrl + "/composition?" + $.param(parametriZahteve),
@@ -370,6 +355,105 @@ function izracunajITM() {
 	}
 }
 
+//izracun BMR - Basal Metabolic Rate - koliko kalorij bi porabil, ce bi cel dan zgolj lezal v postelji
+function izracunajBMR() {
+	var sessionId = getSessionId();
+    $("#sporocilo1").html("");
+	var ehrId = $("#dodajVitalnoEHR").val();
+	if (!ehrId || ehrId.trim().length == 0) {
+		$("#sporocilo1").html("<span class='obvestilo " +
+      "label label-warning fade-in'>Prosim vnesite zahtevan podatek!");
+	} else {
+		$.ajax({
+			url: baseUrl + "/demographics/ehr/" + ehrId + "/party",
+	    	type: 'GET',
+	    	headers: {"Ehr-Session": sessionId},
+	    	success: function (data) {
+				var party = data.party;
+				
+					$.ajax({
+  					    url: baseUrl + "/view/" + ehrId + "/" + "height",
+					    type: 'GET',
+					    headers: {"Ehr-Session": sessionId},
+					    success: function (res) {
+					    	if (res.length > 0) {
+					    	
+						    	var visina = res[0].height;
+					    	} else {
+					    		$("#sporocilo1").html(
+                    "<span class='obvestilo label label-warning fade-in'>" +
+                    "Ni podatkov!</span>");
+					    	}
+					    },
+					    error: function() {
+					    	$("#sporocilo1").html(
+                  "<span class='obvestilo label label-danger fade-in'>Napaka '" +
+                  JSON.parse(err.responseText).userMessage + "'!");
+					    }
+					});
+				
+	    	},
+	    	error: function(err) {
+	    		$("#sporocilo1").html(
+            "<span class='obvestilo label label-danger fade-in'>Napaka '" +
+            JSON.parse(err.responseText).userMessage + "'!");
+	    	}
+		});
+		$.ajax({
+			url: baseUrl + "/demographics/ehr/" + ehrId + "/party",
+	    	type: 'GET',
+	    	headers: {"Ehr-Session": sessionId},
+	    	success: function (data) {
+				var party = data.party;
+				
+
+					$.ajax({
+  					    url: baseUrl + "/view/" + ehrId + "/" + "weight",
+					    type: 'GET',
+					    headers: {"Ehr-Session": sessionId},
+					    success: function (res) {
+					    	if (res.length > 0) {
+					    	//	var starost =getAge(formatDateUS(party.dateOfBirth)); // 
+					    		var bmr = 10*res[0].weight+6.25*visina-5*30; // povprecno starost izberemo 30let
+					    		bmr = Math.round(bmr*100)/100;
+					    		var kalorij;
+					    		kalorij = bmr*1.2;
+					    		$('#kalorijNaDan1').html('<br/><span>Če želite ohranjati svojo težo in <b>niste športno aktivni</b>,morate zaužiti '+kalorij+' kalorij na dan</span>');
+					    		kalorij = bmr*1.375;
+					    		$('#kalorijNaDan2').html('<br/><span>Če želite ohranjati svojo težo in <b>ste športno aktivni 1-3x na teden</b>,morate zaužiti '+kalorij+' kalorij na dan</span>');
+					    		kalorij = bmr*1.55;
+					    		$('#kalorijNaDan3').html('<br/><span>Če želite ohranjati svojo težo in <b>ste športno aktivni 3-5x na teden</b>,morate zaužiti '+kalorij+' kalorij na dan</span>');
+					    		kalorij = bmr*1.175;
+					    		$('#kalorijNaDan4').html('<br/><span>Če želite ohranjati svojo težo in <b>ste športno aktivni 6-7x na teden</b>,morate zaužiti '+kalorij+' kalorij na dan</span>');
+					    		kalorij = bmr*1.9;
+					    		$('#kalorijNaDan5').html('<br/><span>Če želite ohranjati svojo težo in <b>ste športno aktivni več kot 7x na teden</b>,morate zaužiti '+kalorij+' kalorij na dan</span>');
+					    		if(bmr != 0){
+						    		$('#rezultatBMR').html('<br/><span>Vaš BMR je '+bmr+' </span>');
+					    		} else {
+					    		$("#sporocilo1").html(
+                    "<span class='obvestilo label label-warning fade-in'>" +
+                    "Ni podatkov!</span>");
+					    	}
+					    }
+					    },
+					    error: function() {
+					    	$("#sporocilo1").html(
+                  "<span class='obvestilo label label-danger fade-in'>Napaka '" +
+                  JSON.parse(err.responseText).userMessage + "'!");
+					    }
+					});
+				
+	    	},
+	    	error: function(err) {
+	    		$("#sporocilo1").html(
+            "<span class='obvestilo label label-danger fade-in'>Napaka '" +
+            JSON.parse(err.responseText).userMessage + "'!");
+	    	}
+		});
+	}
+}
+
+
 
 /**
  * Za podan EHR ID preberi demografske podrobnosti pacienta in izpiši sporočilo
@@ -383,10 +467,7 @@ function preberiEHRodBolnika() {
 	$("#dodajVitalnoDatumInUra").val("");
 	$("#dodajVitalnoTelesnaVisina").val("");
 	$("#dodajVitalnoTelesnaTeza").val("");
-	$("#dodajVitalnoTelesnaTemperatura").val("");
-	$("#dodajVitalnoKrvniTlakSistolicni").val("");
-	$("#dodajVitalnoKrvniTlakDiastolicni").val("");
-	$("#dodajVitalnoNasicenostKrviSKisikom").val("");
+//	$("dodajVitalnoStarost").val("");
 	$("#dodajVitalnoMerilec").val("");    
 	$("#preberiSporocilo").html("<span id='preberiSporocilo'</span>");
 
@@ -555,7 +636,148 @@ function preberiMeritveVitalnihZnakov() {
 		});
 	}
 }
+/*
+function getAge(dateString) {
+        var now = new Date();
+        var today = new Date(now.getYear(), now.getMonth(), now.getDate());
 
+        var yearNow = now.getYear();
+        var monthNow = now.getMonth();
+        var dateNow = now.getDate();
+
+        var dob = new Date(dateString.substring(6, 10),
+                dateString.substring(0, 2) - 1,
+            dateString.substring(3, 5)
+        );
+
+        var yearDob = dob.getYear();
+        var monthDob = dob.getMonth();
+        var dateDob = dob.getDate();
+        var age = {};
+        var ageString = "";
+        var yearString = "";
+        var monthString = "";
+        var dayString = "";
+
+
+        var yearAge = yearNow - yearDob;
+
+        if (monthNow >= monthDob)
+            var monthAge = monthNow - monthDob;
+        else {
+            yearAge--;
+            var monthAge = 12 + monthNow - monthDob;
+        }
+
+        if (dateNow >= dateDob)
+            var dateAge = dateNow - dateDob;
+        else {
+            monthAge--;
+            var dateAge = 31 + dateNow - dateDob;
+
+            if (monthAge < 0) {
+                monthAge = 11;
+                yearAge--;
+            }
+        }
+
+        age = {
+            years: yearAge,
+            months: monthAge,
+            days: dateAge
+        };
+
+        if (age.years > 1) yearString = "y";
+        else yearString = "y";
+        if (age.months > 1) monthString = "m";
+        else monthString = "m";
+        if (age.days > 1) dayString = " days";
+        else dayString = " day";
+
+
+        if ((age.years > 0) && (age.months > 0) && (age.days > 0))
+            ageString = age.years + yearString + " " + age.months + monthString;// + ", and " + age.days + dayString + " old";
+        else if ((age.years == 0) && (age.months == 0) && (age.days > 0))
+            ageString = age.days + dayString + " old";
+        else if ((age.years > 0) && (age.months == 0) && (age.days == 0))
+            ageString = age.years + yearString;// + " old. Happy Birthday!";
+        else if ((age.years > 0) && (age.months > 0) && (age.days == 0))
+            ageString = age.years + yearString + " and " + age.months + monthString;// + " old";
+        else if ((age.years == 0) && (age.months > 0) && (age.days > 0))
+            ageString = age.months + monthString; // + " and " + age.days + dayString + " old";
+        else if ((age.years > 0) && (age.months == 0) && (age.days > 0))
+            ageString = age.years + yearString;// + " and " + age.days + dayString + " old";
+        else if ((age.years == 0) && (age.months > 0) && (age.days == 0))
+            ageString = age.months + monthString;// + " old";
+        else ageString = "Oops! Could not calculate age!";
+
+        return ageString;
+    }
+
+    function formatDate(date, completeDate) {
+
+        var d = new Date(date);
+
+        var curr_date = d.getDate();
+        curr_date = normalizeDate(curr_date);
+
+        var curr_month = d.getMonth();
+        curr_month++;
+        curr_month = normalizeDate(curr_month);
+
+        var curr_year = d.getFullYear();
+
+        var curr_hour = d.getHours();
+        curr_hour = normalizeDate(curr_hour);
+
+        var curr_min = d.getMinutes();
+        curr_min = normalizeDate(curr_min);
+
+        var curr_sec = d.getSeconds();
+        curr_sec = normalizeDate(curr_sec);
+
+        var dateString, monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+        if (completeDate){
+            dateString = curr_date + "-" + monthNames[curr_month-1] + "-" + curr_year + " at " + curr_hour + ":" + curr_min; // + ":" + curr_sec;
+        }
+        else dateString = curr_date + "-" + monthNames[curr_month-1] + "-" + curr_year;
+
+        return dateString;
+
+    }
+
+   function formatDateUS(date) {
+        var d = new Date(date);
+
+        var curr_date = d.getDate();
+        curr_date = normalizeDate(curr_date);
+
+        var curr_month = d.getMonth();
+        curr_month++;
+        curr_month = normalizeDate(curr_month);
+
+        var curr_year = d.getFullYear();
+
+        return curr_month + "-" + curr_date + "-" + curr_year;
+
+    }
+
+    function getAgeInYears(dateOfBirth) {
+        var dob = new Date(dateOfBirth);
+        var timeDiff = Math.abs(Date.now() - dob.getTime());
+        return Math.floor(timeDiff / (1000 * 3600 * 24 * 365));
+    }
+
+    function normalizeDate(el) {
+        el = el + "";
+        if (el.length == 1) {
+            el = "0" + el;
+        }
+        return el;
+    }
+
+*/
 
  $(document).ready(function(){
      $("#preberiPredlogoBolnika").change(function(){
@@ -578,11 +800,7 @@ function preberiMeritveVitalnihZnakov() {
 		$("#dodajVitalnoDatumInUra").val(podatki[1]);
 		$("#dodajVitalnoTelesnaVisina").val(podatki[2]);
 		$("#dodajVitalnoTelesnaTeza").val(podatki[3]);
-		$("#dodajVitalnoTelesnaTemperatura").val(podatki[4]);
-		$("#dodajVitalnoKrvniTlakSistolicni").val(podatki[5]);
-		$("#dodajVitalnoKrvniTlakDiastolicni").val(podatki[6]);
-		$("#dodajVitalnoNasicenostKrviSKisikom").val(podatki[7]);
-		$("#dodajVitalnoMerilec").val(podatki[8]);
+		//$("dodajVitalnoStarost").val(podatki[9]);
 	});
 	$('#preberiEhrIdZaVitalneZnake').change(function() {
 		$("#preberiMeritveVitalnihZnakovSporocilo").html("");
