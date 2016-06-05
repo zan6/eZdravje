@@ -322,14 +322,33 @@ function izracunajITM() {
 					    	if (res.length > 0) {
 					    		var itm = res[0].weight/(visina*0.01*visina*0.01);
 					    		itm = Math.round(itm*100)/100;
-					    		if(itm>18.5 && itm<25){
-						    		$('#rezultatITM').html('<br/><span>Vaš ITM je '+itm+' in je <b>normalen.</b></span>');
+					    		if(itm > 18.5 && itm < 25){
+						    		$('#rezultatITM').html('<br/><span>Vaš ITM je '+itm+' in pove,da imate <b>normalno telesno težo.</b></span>');
 					    		}
 					    		else if(itm < 18.5){
-					    				$('#rezultatITM').html('<br/><span>Vaš ITM je '+itm+' in je <b>prenizek.</b></span>');
+					    				$('#rezultatITM').html('<br/><span><b>Vaš ITM je </b>'+itm+
+					    				'in pove, da ste<b> podhranjeni.</b></span>'+
+					    				'<span>Za začetek, vam prilagam video,ki vam bo pomagal, da spremenite svoje prehranjevalne navade. </span>'+
+						    			'<br><br><iframe style="margin:5px" align:"top" src="https://www.youtube.com/embed/S9dfU99VvuQ" frameborder="0" allowfullscreen></iframe>');
 					    		}
-					    		else if(itm > 25){
-					    					$('#rezultatITM').html('<br/><span>Vaš ITM je '+itm+' in je <b>previsok.</b></span>');
+					    		else if(itm >= 25 && itm < 30){
+									$('#rezultatITM').html('<br/><span><b>Vaš ITM je </b>'+itm+
+					    				'in pove, da ste <b> pretežki.</b></span>'+
+					    				'<span>Za začetek, vam prilagam video,ki vam bo pomagal pri izgubi odvečne maščobe. </span>'+
+						    			'<br><br><iframe style="margin:5px" align:"top" src="https://www.youtube.com/embed/cIpo9_Fh8oE" frameborder="0" allowfullscreen></iframe>');
+					    		}else if(itm >= 30 && itm < 35){
+					    				$('#rezultatITM').html('<br/><span><b>Vaš ITM je </b>'+itm+
+					    				'in pove, da ste dosegli <b>1.stopnjo debelosti.</b></span>'+
+					    				'Za začetek, vam prilagam video,ki vam bo pomagal pri izgubi odvečne maščobe. '+
+						    			'<br><br><iframe style="margin:5px" align:"top" src="https://www.youtube.com/embed/fcN37TxBE_s" frameborder="0" allowfullscreen></iframe>');
+					    		}else if(itm >= 35){
+					    			$('#rezultatITM').html('<br/><span>Vaš itm je '+itm+
+					    				'in pove, da ste dosegli 1.stopnjo debelosti.'+
+					    				' Odločili ste se, da želite spremeniti svoje navade. Odlično! Potrebna je le vztrajnost in uspelo vam bo! <b>Kjer je volja,tam je pot!</b>'+
+					    				'<span>Naj vam priložim  motivacijski video da boste videli da je z vztrajnostjo vse mogoče: </span>'+
+						    			'<br><br><iframe style="margin:5px" align:"top" src="https://www.youtube.com/embed/RvpIySenwfk" frameborder="0" allowfullscreen></iframe>'+
+						    			'<br><span>Tu pa vam prilagam še video, ki naj vam pomaga pri začetku telovadbe: </br>'+
+						    			'<br><br><iframe style="margin:5px" align:"top" src="https://www.youtube.com/embed/IR31lyaxJE4" frameborder="0" allowfullscreen></iframe></span>');
 					    		}
 					    	
 					    		} else {
