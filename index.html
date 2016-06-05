@@ -10,6 +10,9 @@
   <script src="knjiznice/js/jquery-2.2.3.min.js"></script>
   <script src="knjiznice/js/bootstrap.min.js"></script>
   <script src="knjiznice/js/koda.js"></script>
+   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 </head>
 <body>
 
@@ -49,7 +52,7 @@
 							  <option value=""></option>
 							  <option value="Winchester,Dean,1984-07-25T11:32,acca9ee6-6710-47b6-adba-51540d1bcde8">Dean Winchester</option>
                 <option value="Rich,Piana,1971-09-26T14:58,9561d449-7c81-4495-84ec-03c2b77cd3f3">Rich Piana</option>
-                <option value="Winchester,Sam,1987-05-03T09:58,014c4fd0-540e-4561-bc2b-cc5f50fe69f6">Sam Winchester</option> 
+                <option value="Winchester,Sam,1987-05-03T09:58,f806a541-54d5-4cab-8a4a-31bdfb9a88cf">Sam Winchester</option> 
 						</select>
 						</div>
 						</div>
@@ -98,7 +101,7 @@
 							  <option value=""></option>
 							  <option value="acca9ee6-6710-47b6-adba-51540d1bcde8|2015-09-13T12:03Z|185|81.5">Dean Winchester</option>
 						  	<option value="9561d449-7c81-4495-84ec-03c2b77cd3f3|2016-03-19T19:31Z|185|140.3">Rich Piana</option>
-						  	<option value="014c4fd0-540e-4561-bc2b-cc5f50fe69f6|2015-08-25T12:10Z|191|78.0">Sam Winchester</option>
+						  	<option value="f806a541-54d5-4cab-8a4a-31bdfb9a88cf|2015-08-25T12:10Z|191|78.0">Sam Winchester</option>
 						  	
 						  	</select>
 						  	</div>
@@ -131,6 +134,20 @@
 			</div>
 	</div>
 
+           <div class="row">
+	       	       <div class="col-sm-6"><b>Poglej graf telesne teže</b></div>
+	       	       <div class="col-sm-3">
+	       	       </div>
+	       	       <div class="col-sm-3">
+	       	         <button type="button" class="btn btn-primary btn-xs" onclick="prikaziGrafe()">Izriši graf telesne teže</button>
+	       	       </div>
+	       	       <div class = "row">
+						    <div class="col-sm-6">
+						      <span id="sporocilo3"></span>
+						    </div>
+						  </div>
+	       	    </div>
+	       	  </div>
 
   <!-- KONEC: Vsebina aplikacije -->
   

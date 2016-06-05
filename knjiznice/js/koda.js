@@ -323,7 +323,10 @@ function izracunajITM() {
 					    		var itm = res[0].weight/(visina*0.01*visina*0.01);
 					    		itm = Math.round(itm*100)/100;
 					    		if(itm > 18.5 && itm < 25){
-						    		$('#rezultatITM').html('<br/><span>Vaš ITM je '+itm+' in pove,da imate <b>normalno telesno težo.</b></span>');
+						    		$('#rezultatITM').html('<br/><span><b>Vaš ITM je </b>'+itm+
+					    				' in pove, da <b> imate normalno telesno težo.</b></span>'+
+					    				'<span>Čas je,da pridobite nekaj mišične mase, zato vam prilagam video, ki vam bo pri tem pomagal </span>'+
+						    			'<br><br><iframe style="margin:5px" align:"top" src="https://www.youtube.com/embed/o9zCgPtsups" frameborder="0" allowfullscreen></iframe>');
 					    		}
 					    		else if(itm < 18.5){
 					    				$('#rezultatITM').html('<br/><span><b>Vaš ITM je </b>'+itm+
@@ -655,6 +658,74 @@ function preberiMeritveVitalnihZnakov() {
 		});
 	}
 }
+
+function prikaziGrafe(){
+	var sessionId = getSessionId();
+	var ehrId = $("#dodajVitalnoEHR").val();
+	$("#sporocilo3").html("<span id='sporocilo3'</span>");
+	var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+	if (!ehrId || ehrId.trim().length == 0) {
+			$("#sporocilo3").html("<span class='obvestilo " +
+	      "label label-warning fade-in'>Prosim vnesite ehrId v polje VPIŠI ŽELJENI EHR ID!</span>");
+	}else {
+	$.ajax({
+	    url: baseUrl + "/view/" + ehrId + "/height",
+	    type: 'GET',
+	    headers: {
+	        "Ehr-Session": sessionId
+	    },
+	    success: function (res) {
+	        res.forEach(function(el, i, arr) {
+	            var date = new Date(el.time);
+	            el.date = date.getDate() + '-' + monthNames[date.getMonth()];
+	        });
+	
+	        new Morris.Bar({
+	            element: 'chart-height',
+	            data: res.reverse(),
+	            xkey: 'date',
+	            ykeys: ['height'],
+	            labels: ['Height'],
+	            hideHover: true,
+	            barColors: ['#48CFAD', '#37BC9B'],
+	            xLabelMargin: 5,
+	            resize: true
+	        });
+	        document.getElementById("naslov1").innerHTML = "Višina";
+	    }
+	});
+  
+	$.ajax({
+	    url: baseUrl + "/view/" + ehrId + "/weight",
+	    type: 'GET',
+	    headers: {
+	        "Ehr-Session": sessionId
+	    },
+	    success: function (res) {
+	
+	       	res.forEach(function(el, i, arr) {
+	            var date = new Date(el.time);
+	            el.date = date.getDate() + '-' + monthNames[date.getMonth()];
+	        });
+	
+	        new Morris.Bar({
+	            element: 'chart-weight',
+	            data: res.reverse(),
+	            xkey: 'date',
+	            ykeys: ['weight'],
+	            labels: ['Weight'],
+	       	    hideHover: true,
+		        barColors: ['#4FC1E9'],
+		        xLabelMargin: 5,
+		        resize: true
+	        });
+			document.getElementById("naslov2").innerHTML = "Teža";
+	    }
+	});
+   }
+}
+
+
 /*
 function getAge(dateString) {
         var now = new Date();
