@@ -167,50 +167,6 @@ function dodajMeritveVitalnihZnakov() {
 }
 
 
-function kreirajEHRzaBolnika() {
-	var sessionId = getSessionId();
-
-	var ime = $("#kreirajIme").val();
-	var priimek = $("#kreirajPriimek").val();
-	var datumRojstva = $("#kreirajDatumRojstva").val();
-
-		$.ajaxSetup({
-		    headers: {"Ehr-Session": sessionId}
-		});
-		$.ajax({
-		    url: baseUrl + "/ehr",
-		    type: 'POST',
-		    success: function (data) {
-		        var ehrId = data.ehrId;
-		        var partyData = {
-		            firstNames: ime,
-		            lastNames: priimek,
-		            dateOfBirth: datumRojstva,
-		            partyAdditionalInfo: [{key: "ehrId", value: ehrId}]
-		        };
-		        $.ajax({
-		            url: baseUrl + "/demographics/party",
-		            type: 'POST',
-		            contentType: 'application/json',
-		            data: JSON.stringify(partyData),
-		            success: function (party) {
-		                if (party.action == 'CREATE') {
-		                    $("#kreirajSporocilo").html("<span class='obvestilo " +
-                          "label label-success fade-in'>Uspešno kreiran EHR '" +
-                          ehrId + "'.</span>");
-		                    $("#preberiEHRid").val(ehrId);
-		                }
-		            },
-		            error: function(err) {
-		            	$("#kreirajSporocilo").html("<span class='obvestilo label " +
-                    "label-danger fade-in'>Napaka '" +
-                    JSON.parse(err.responseText).userMessage + "'!");
-		            }
-		        });
-		    }
-		});
-	}
-
 
 function kreirajEHRzaBolnika() {
 	var sessionId = getSessionId();
